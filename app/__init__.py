@@ -1,7 +1,11 @@
-from flask import Flask
+from flask import Flask, Blueprint
+from flask_restx import Api
+
+api_bp = Blueprint('API', __name__, url_prefix='/api')
 
 app = Flask(__name__)
+api = Api(api_bp, doc='/doc')
 
-@app.route('/')
-def index():
-    return {"data": "Welcome to Quike on Flask, REST API, Swagger UI, DB Connection"}
+app.register_blueprint(api_bp)
+
+from app.routes import index
