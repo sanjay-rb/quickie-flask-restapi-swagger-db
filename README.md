@@ -1,4 +1,4 @@
-# Welcome to the Quike on Flask, REST API, Swagger UI, DB Connection
+# Welcome to the Quickie on Flask, REST API, Swagger UI, DB Connection
 
 ## Starter App
 - Open `starter_app` folder, run `app.py` file 
