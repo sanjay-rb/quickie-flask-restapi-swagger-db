@@ -129,4 +129,5 @@ if __name__ == "__main__":
 
 ## Reference link
 - [Flask Documentation](https://flask.palletsprojects.com/en/2.2.x/)
+- [Flask SQL-Alchemy](https://flask-sqlalchemy.palletsprojects.com/en/3.0.x/)
 - [RestX Documentation](https://flask-restx.readthedocs.io/en/latest/installation.html)
