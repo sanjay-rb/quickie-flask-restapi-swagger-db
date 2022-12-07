@@ -7,7 +7,7 @@
 ## Starter App
 - Open `starter_app` folder, run `app.py` file 
 
-[starter_app\app.py](starter_app/app.py)
+[starter_app/app.py](starter_app/app.py)
 
 ```python
 # Importing flask modules to start with
@@ -30,7 +30,7 @@ if __name__ == "__main__":
 ## Simple Rest API App
 - Open `simple_restapi_app` folder, run `app.py` file 
 
-[simple_restapi_app\app.py](simple_restapi_app\app.py)
+[simple_restapi_app/app.py](simple_restapi_app/app.py)
 
 ```python
 # Importing requried modules
