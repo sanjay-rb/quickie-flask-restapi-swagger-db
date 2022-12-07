@@ -1,5 +1,9 @@
 # Welcome to the Quickie on Flask, REST API, Swagger UI, DB Connection
 
+## Run setup.bat file for windows
+- Open cmd in repo folder
+- Run `setup.bat`
+
 ## Starter App
 - Open `starter_app` folder, run `app.py` file 
 
