@@ -1,34 +1,3 @@
-# Welcome to the Quike on Flask, REST API, Swagger UI, DB Connection
-
-## Starter App
-- Open `starter_app` folder, run `app.py` file 
-
-[starter_app\app.py](starter_app\app.py)
-
-```python
-# Importing flask modules to start with
-from flask import Flask
-
-# Creating new flask app
-app = Flask(__name__)
-
-# Creating a basic GET endpoint for
-# Endpoint : http://localhost:5000/
-@app.route('/')
-def index():
-    return {'data':'Hello World!'}
-
-# Main code to start the server
-if __name__ == "__main__":
-    app.run(host='localhost', port=5000, debug=True)
-```
-
-## Simple Rest API App
-- Open `simple_restapi_app` folder, run `app.py` file 
-
-[simple_restapi_app\app.py](simple_restapi_app\app.py)
-
-```python
 # Importing requried modules
 from flask import Flask, jsonify, request
 from datetime import datetime
@@ -119,10 +88,3 @@ def deletelink():
 # Main template code to start the server
 if __name__ == "__main__":
     app.run(host='localhost', port=5000, debug=True)
-```
-
-
-
-## Reference link
-- [Flask Documentation](https://flask.palletsprojects.com/en/2.2.x/)
-- [RestX Documentation](https://flask-restx.readthedocs.io/en/latest/installation.html)
