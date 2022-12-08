@@ -12,20 +12,24 @@ class Link(db.Model):
     created = db.Column(db.DateTime(), default=datetime.now())
     updated = db.Column(db.DateTime())
 
+    # To create db if not exsist
     def create_db(self):
         with app.app_context():
             db.create_all()
 
+    # Add current obj of link to db
     def add(self):
         self.create_db()
         db.session.add(self)
         db.session.commit()
 
+    # Update current obj of link to db
     def update(self):
         self.create_db()
         self.updated = datetime.now()
         db.session.commit()
 
+    # Delete current obj of link from db
     def delete(self):
         self.create_db()
         db.session.delete(self)

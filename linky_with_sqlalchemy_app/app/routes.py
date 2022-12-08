@@ -60,7 +60,7 @@ def readlink():
 
     try:
         links = Link.query.all() # we get as model obj
-        linky = [l.json() for l in links] # running new loop for change obj to json :(  
+        linky = [l.json() for l in links] # running new loop for change obj to json :(, but we can find solution for this in upcoming modules
     except Exception as err:
         error.append(str(err))
 

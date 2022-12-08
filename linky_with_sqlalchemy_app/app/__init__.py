@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 # configure the SQLite database, relative to the app instance folder
 db_path = os.path.join(os.getcwd(), 'linky_with_sqlalchemy_app/linky.db')
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///{}".format(db_path)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + str(db_path)
 # initialize the app with the extension
 db.init_app(app)
 
