@@ -4,7 +4,7 @@ from flask import request, jsonify
 
 from datetime import datetime
 
-from project.models import Link
+from project.models import User, Link
 
 
 # Creating link is validate or not.
@@ -24,8 +24,23 @@ def index():
     return {'data':'Hello World!'}
 
 # Create operation CRUD, ie : C -> CRUD
+# Endpoint : http://localhost:5000/create  
+# To create a new user 
+@app.route('/createuser')
+def createuser():
+    data = request.get_json()
+    error = []
+    name = data.get('title')
+    try:
+        user = User(name=name, created=datetime.now(), updated=datetime.now())
+        user.add()
+    except Exception as err:
+        error.append(str(err))
+
+
+# Create operation CRUD, ie : C -> CRUD
 # Endpoint : http://localhost:5000/createlink  
-# To create a new link dict and add that to our linky dict
+# To create a new link 
 @app.route('/createlink', methods=['POST'])
 def createlink():
     data = request.get_json()
@@ -40,10 +55,8 @@ def createlink():
         link = Link(id=id, title=title, link=link, created=datetime.now(), updated=datetime.now())
         link.add()
     except Exception as err:
-        if "UNIQUE constraint failed: link.link" in str(err):
-            error.append("ERROR : Link given is already added to our database")
-        else:
-            error.append(str(err))
+        error.append(str(err))
+            
     
     if len(error) == 0:
         return jsonify({'data' : 'link added with id {}'.format(id), 'error' : []}), 200
@@ -52,7 +65,7 @@ def createlink():
 
 # Read operation CRUD, ie : R -> CRUD
 # Endpoint : http://localhost:5000/readlink (or) http://localhost:5000/
-# To read & return all links in linky dict
+# To read & return all links
 @app.route('/', methods=['GET'])
 @app.route('/readlink', methods=['GET'])
 def readlink():
@@ -72,7 +85,7 @@ def readlink():
 
 # Read operation CRUD, ie : R -> CRUD
 # Endpoint : http://localhost:5000/readlink (or) http://localhost:5000/
-# To read & return all links in linky dict
+# To read & return one link
 @app.route('/<int:id>', methods=['GET'])
 @app.route('/readlink/<int:id>', methods=['GET'])
 def readSinglelink(id):
@@ -96,7 +109,7 @@ def readSinglelink(id):
 
 # Update operation CRUD, ie : U -> CRUD
 # Endpoint : http://localhost:5000/updatelink 
-# To update a link in linky dict using link's id
+# To update a link 
 @app.route('/updatelink', methods=['PUT'])
 def updatelink():
     data = request.get_json()
@@ -126,7 +139,7 @@ def updatelink():
 
 # Delete operation CRUD, ie : D -> CRUD
 # Endpoint : http://localhost:5000/deletelink 
-# To delete a link in linky dict using link's id
+# To delete a link
 @app.route('/deletelink', methods=['DELETE'])
 def deletelink():
     data = request.get_json()
