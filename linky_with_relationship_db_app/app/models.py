@@ -1,6 +1,11 @@
 from app import app, db
 from datetime import datetime
 
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(50), nullable=False)
+    links = db.relationship('Link', backref='category')
+
 class Link(db.Model):
     # To find all the datatypes can used for columns can find by printing below link 
     # print(dir(db.types))
@@ -11,6 +16,7 @@ class Link(db.Model):
     title = db.Column(db.String(50), nullable=False)
     created = db.Column(db.DateTime(), default=datetime.now())
     updated = db.Column(db.DateTime())
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
 
     # To create db if not exsist
     def create_db(self):
