@@ -1,4 +1,4 @@
-from app import app, db
+from project import app, db
 from datetime import datetime
 
 class Category(db.Model):

@@ -1,10 +1,10 @@
 import urllib.request
-from app import app
+from project import app
 from flask import request, jsonify
 
 from datetime import datetime
 
-from app.models import Link
+from project.models import Link
 
 
 # Creating link is validate or not.

@@ -17,22 +17,16 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + str(db_path)
 # initialize the app with the extension
 db.init_app(app)
 
-
 class Link(db.Model):
     # To find all the datatypes can used for columns can find by printing below link 
     # print(dir(db.types))
 
     # Column args, autoincrement, default, nullable, primary_key, unique, quote (to force quote), comment
     id = db.Column(db.Integer, primary_key=True)
-    link = db.Column(db.String(200), unique=True, nullable=False)
+    link = db.Column(db.String(200), nullable=False)
     title = db.Column(db.String(50), nullable=False)
     created = db.Column(db.DateTime(), default=datetime.now())
     updated = db.Column(db.DateTime())
-
-    # To create db if not exsist
-    def create_db(self):
-        with app.app_context():
-            db.create_all()
 
     # Add current obj of link to db
     def add(self):
@@ -59,6 +53,9 @@ class Link(db.Model):
     def __repr__(self):
         return 'Link(id={}, link={}, title={})'.format(self.id, self.link, self.title)
 
+# To create db & table if not exsist
+with app.app_context():
+    db.create_all()
 
 # Creating link is validate or not.
 def checkLink(link, error):
@@ -73,7 +70,6 @@ def checkLink(link, error):
 # Endpoint : http://localhost:5000/
 @app.route('/')
 def index():
-    Link().create_db()
     return {'data':'Hello World!'}
 
 # Create operation CRUD, ie : C -> CRUD
@@ -93,10 +89,8 @@ def createlink():
         link = Link(id=id, title=title, link=link, created=datetime.now(), updated=datetime.now())
         link.add()
     except Exception as err:
-        if "UNIQUE constraint failed: link.link" in str(err):
-            error.append("ERROR : Link given is already added to our database")
-        else:
-            error.append(str(err))
+        error.append(str(err))
+            
     
     if len(error) == 0:
         return jsonify({'data' : 'link added with id {}'.format(id), 'error' : []}), 200
