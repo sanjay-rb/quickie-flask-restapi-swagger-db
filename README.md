@@ -126,9 +126,10 @@ if __name__ == "__main__":
 ```
 
 ## Let's start db connection
-- Open `linky_with_sqlalchemy_app` folder, run `main.py` file 
+- Open `db_connection_app` folder, run `app.py` file 
 - Sqlite database connection with `flask_sqlalchemy` 
-[`linky_with_sqlalchemy_app/app/__init__.py`](linky_with_sqlalchemy_app/app/__init__.py)
+
+[`db_connection_app/app.py`](db_connection_app/app.py)
 ```python
 from flask_sqlalchemy import SQLAlchemy
 
@@ -140,18 +141,16 @@ db = SQLAlchemy()
 ...
 
 # configure the SQLite database, relative to the app instance folder
-db_path = os.path.join(os.getcwd(), 'linky_with_sqlalchemy_app/linky.db')
+db_path = os.path.join(os.getcwd(), 'db_connection_app/linky.db')
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + str(db_path)
 # initialize the app with the extension
 db.init_app(app)
 
 ```
 - Simple model created for link
-[`linky_with_sqlalchemy_app/app/models.py`](linky_with_sqlalchemy_app/app/models.py)
-```python
-from app import app, db
-from datetime import datetime
 
+[`db_connection_app/app.py`](db_connection_app/app.py)
+```python
 class Link(db.Model):
     # To find all the datatypes can used for columns can find by printing below link 
     # print(dir(db.types))
@@ -197,11 +196,9 @@ class Link(db.Model):
         return 'Link(id={}, link={}, title={})'.format(self.id, self.link, self.title)
 ```
 - Route which invoke these model
-[`linky_with_sqlalchemy_app/app/route.py`](linky_with_sqlalchemy_app/app/route.py)
-```python
-from app.models import Link
 
-...
+[`db_connection_app/app.py`](db_connection_app/app.py)
+```python
 
 @app.route('/createlink', methods=['POST'])
 def createlink():

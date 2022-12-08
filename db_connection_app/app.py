@@ -1,10 +1,63 @@
-import urllib.request
-from app import app
-from flask import request, jsonify
-
+# Importing flask modules to start with
+from flask import Flask, jsonify, request
+from flask_sqlalchemy import SQLAlchemy
+import os
 from datetime import datetime
+import urllib.request
 
-from app.models import Link
+# create the extension
+db = SQLAlchemy()
+
+# Creating new flask app
+app = Flask(__name__)
+
+# configure the SQLite database, relative to the app instance folder
+db_path = os.path.join(os.getcwd(), 'db_connection_app/linky.db')
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + str(db_path)
+# initialize the app with the extension
+db.init_app(app)
+
+
+class Link(db.Model):
+    # To find all the datatypes can used for columns can find by printing below link 
+    # print(dir(db.types))
+
+    # Column args, autoincrement, default, nullable, primary_key, unique, quote (to force quote), comment
+    id = db.Column(db.Integer, primary_key=True)
+    link = db.Column(db.String(200), unique=True, nullable=False)
+    title = db.Column(db.String(50), nullable=False)
+    created = db.Column(db.DateTime(), default=datetime.now())
+    updated = db.Column(db.DateTime())
+
+    # To create db if not exsist
+    def create_db(self):
+        with app.app_context():
+            db.create_all()
+
+    # Add current obj of link to db
+    def add(self):
+        db.session.add(self)
+        db.session.commit()
+
+    # Update current obj of link to db
+    def update(self):
+        self.updated = datetime.now()
+        db.session.commit()
+
+    # Delete current obj of link from db
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+    
+    def json(self):
+        return {
+            "id" : self.id,
+            "title" : self.title,
+            "link" : self.link,
+        }
+
+    def __repr__(self):
+        return 'Link(id={}, link={}, title={})'.format(self.id, self.link, self.title)
 
 
 # Creating link is validate or not.
@@ -146,3 +199,7 @@ def deletelink():
         return jsonify({'data' : 'link with id {} deleted'.format(id), 'error' : []}), 200
     else:
         return jsonify({'data' : [], 'error' : error}), 404
+
+# Main code to start the server
+if __name__ == "__main__":
+    app.run(host='localhost', port=5000, debug=True)
