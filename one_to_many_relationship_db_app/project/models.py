@@ -4,9 +4,10 @@ from datetime import datetime
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False)
-    links = db.relationship('Link', backref='user')
     created = db.Column(db.DateTime(), default=datetime.now())
     updated = db.Column(db.DateTime())
+    links = db.relationship('Link', backref='user_obj')
+    
 
     # Add current obj of link to db
     def add(self):
@@ -42,7 +43,7 @@ class Link(db.Model):
     title = db.Column(db.String(50), nullable=False)
     created = db.Column(db.DateTime(), default=datetime.now())
     updated = db.Column(db.DateTime())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     # Add current obj of link to db
     def add(self):

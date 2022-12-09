@@ -266,6 +266,51 @@ def deletelink():
     ...
 ```
 
+## One to Many Relationship on DB
+- As you can see we are handleing lot of code in single file, it time to jump into modules
+- Explore `project` module in `one_to_many_relationship_db_app` folder
+- run `main.py` file, to start the server
+- let's stick to the 1:n relationship
+
+[one_to_many_relationship_db_app/project/models.py](one_to_many_relationship_db_app/project/models.py)
+```python
+class User(db.Model):
+    ...
+    ...
+    links = db.relationship('Link', backref='user_obj')
+    ...
+    ...
+
+class Link(db.Model):
+    ...
+    ...
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    ...
+    ...
+```
+- above two link make one to many relationship between those to table User (1) -> Link(n)
+
+![one-to-many](images/one-to-many.png)
+
+- use of Flask SQL-Alchemy ?
+- no need to write complex query to make or use this relationship
+
+[one_to_many_relationship_db_app/project/routes.py](one_to_many_relationship_db_app/project/routes.py)
+```python
+@app.route('/createlink', methods=['POST'])
+def createlink():
+    ...
+    try:
+        user = User.query.filter(User.id == user_id).first()
+        link = Link(id=id, title=title, link=link, created=datetime.now(), updated=datetime.now(), user_obj=user)
+        link.add()
+    except Exception as err:
+        if "NOT NULL constraint failed: link.user_id" in str(err):
+            error.append("ERROR : Please provide valid 'user_id' while creating link")
+        else:
+            error.append(str(err))
+    ...
+```
 ## Reference link
 - [Flask Documentation](https://flask.palletsprojects.com/en/2.2.x/)
 - [Flask SQL-Alchemy](https://flask-sqlalchemy.palletsprojects.com/en/3.0.x/)

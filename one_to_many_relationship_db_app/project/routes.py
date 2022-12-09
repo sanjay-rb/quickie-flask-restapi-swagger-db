@@ -24,18 +24,66 @@ def index():
     return {'data':'Hello World!'}
 
 # Create operation CRUD, ie : C -> CRUD
-# Endpoint : http://localhost:5000/create  
+# Endpoint : http://localhost:5000/createuser
 # To create a new user 
-@app.route('/createuser')
+@app.route('/createuser', methods=['POST'])
 def createuser():
     data = request.get_json()
     error = []
-    name = data.get('title')
+    name = data.get('name')
     try:
         user = User(name=name, created=datetime.now(), updated=datetime.now())
         user.add()
     except Exception as err:
         error.append(str(err))
+    
+    if len(error) == 0:
+        return jsonify({'data' : 'user added with id {}'.format(user.id), 'error' : []}), 200
+    else:
+        return jsonify({'data' : [], 'error' : error}), 404
+
+# Delete operation CRUD, ie : D -> CRUD
+# Endpoint : http://localhost:5000/deleteuser 
+# To delete a new user 
+@app.route('/deleteuser', methods=['DELETE'])
+def deleteuser():
+    data = request.get_json()
+    error = []
+    id = data.get('id')
+    try:
+        user = User.query.filter(User.id == id).first()
+        user.delete()
+    except Exception as err:
+        error.append(str(err))
+    
+    if len(error) == 0:
+        return jsonify({'data' : 'user deleted with id {}'.format(id), 'error' : []}), 200
+    else:
+        return jsonify({'data' : [], 'error' : error}), 404
+
+
+# Read operation CRUD, ie : R -> CRUD
+# Endpoint : http://localhost:5000/userlink
+# To read & return all links of user
+@app.route('/userlink', methods=['GET'])
+def userlink():
+    data = request.get_json()
+    error = []
+    linky = []
+    user_id = data.get('user_id')
+
+    try:
+        # For single user -> multiple link can be there
+        # ONE to MANY
+        links = User.query.filter(User.id == user_id).first().links
+        linky = [l.json() for l in links]
+    except Exception as err:
+        error.append(str(err))
+
+    if len(error) == 0:
+        return jsonify({'data' : linky, 'error' : []}), 200
+    else:
+        return jsonify({'data' : [], 'error' : error}), 404
 
 
 # Create operation CRUD, ie : C -> CRUD
@@ -48,15 +96,19 @@ def createlink():
     id = str(round(datetime.now().timestamp()))
     title = data.get('title')
     link = data.get('link')
+    user_id = data.get('user_id')
 
     error = checkLink(link, error)
 
     try:
-        link = Link(id=id, title=title, link=link, created=datetime.now(), updated=datetime.now())
+        user = User.query.filter(User.id == user_id).first()
+        link = Link(id=id, title=title, link=link, created=datetime.now(), updated=datetime.now(), user_obj=user)
         link.add()
     except Exception as err:
-        error.append(str(err))
-            
+        if "NOT NULL constraint failed: link.user_id" in str(err):
+            error.append("ERROR : Please provide valid 'user_id' while creating link")
+        else:
+            error.append(str(err))
     
     if len(error) == 0:
         return jsonify({'data' : 'link added with id {}'.format(id), 'error' : []}), 200
