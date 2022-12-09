@@ -311,6 +311,98 @@ def createlink():
             error.append(str(err))
     ...
 ```
+
+## Many to Many Relationship on DB
+- Open `many_to_many_relationship_db_app` ,  run `main.py` file, to start the server
+- let's stick to the n:m relationship
+- To have n:m relation between User & Link, we need association table 
+
+[many_to_many_relationship_db_app/project/models.py](many_to_many_relationship_db_app/project/models.py)
+```python
+user_link_association = db.Table(
+    'user_link_association', 
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('link_id', db.Integer, db.ForeignKey('link.id'))
+)
+```
+
+- We need to link this association on both table link
+
+[many_to_many_relationship_db_app/project/models.py](many_to_many_relationship_db_app/project/models.py)
+```python
+class User(db.Model):
+    # ... some code
+    links = db.relationship('Link', secondary=user_link_association, overlaps="creators")
+    # ... some code
+
+class Link(db.Model):
+    # ... some code
+    creators = db.relationship('User', secondary=user_link_association, overlaps="links")
+    # ... some code
+```
+
+- As you can see we are creating manual backref using to db.relationship() on both table, above can be done like this also
+
+[many_to_many_relationship_db_app/project/models.py](many_to_many_relationship_db_app/project/models.py)
+```python
+class User(db.Model):
+    # ... some code
+    links = db.relationship('Link', secondary=user_link_association, backref="creators")
+    # ... some code
+
+class Link(db.Model):
+    # ... some code
+    # nothing come here , backref automation add creators attribute in Link Model.
+    # ... some code
+```
+
+- To use the n:m relation using Flask SQL-Alchemy
+
+[many_to_many_relationship_db_app/project/routes.py](many_to_many_relationship_db_app/project/routes.py)
+```python
+@app.route('/createlink', methods=['POST'])
+def createlink():
+    # ... some code
+    try:
+        user = User.query.filter(User.id == user_id).first() # getting user
+        try:
+            link = Link.query.filter(Link.link == new_link).first() # getting link if exists
+            if not link:
+                raise Exception("Link not found") # if not exists, raise Exception
+        except Exception as e:
+            link = Link(id=id, title=title, link=new_link, created=datetime.now(), updated=datetime.now()) # creating new link 
+        user.links.append(link) # just adding this link to user
+        user.update() # and updating the user for db.commit() & done
+    except Exception as err:
+        # ... some code
+
+# ... some code
+@app.route('/userlink', methods=['GET'])
+def userlink():
+    # ... some code
+    try:
+        # For single user -> multiple link can be there
+        # MANY to MANY
+        links = User.query.filter(User.id == user_id).first().links
+        linky = [l.json() for l in links]
+    except Exception as err:
+        error.append(str(err))
+    # ... some code
+
+# ... some code
+@app.route('/linkuser', methods=['GET'])
+def linkuser():
+    # ... some code
+    try:
+        # For single link -> multiple user can be there
+        # MANY to MANY
+        creators = Link.query.filter(Link.id == link_id).first().creators
+        users = [c.json() for c in creators]
+    except Exception as err:
+        error.append(str(err))
+    # ... some code
+```
+
 ## Reference link
 - [Flask Documentation](https://flask.palletsprojects.com/en/2.2.x/)
 - [Flask SQL-Alchemy](https://flask-sqlalchemy.palletsprojects.com/en/3.0.x/)
