@@ -13,7 +13,7 @@ if __name__ == "__main__":
 ```
 
 - What is this `project` and `app`
-- `project` is the custom module which is created and we have app variable in it's  `__init__.py`.
+- `project` is the custom module which is created and we have `app` variable in it's  `__init__.py`.
 
 [`./1_starter/project/__init__.py`](./1_starter/project/__init__.py)
 ```python
