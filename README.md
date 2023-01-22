@@ -1,22 +1,20 @@
 # Welcome to the Quickie on Flask, REST API, Swagger UI, DB Connection
 
-## Starter App
-- Please open `1_starter` folder and run `start_server.py` to start the server.
-- Let's see what is there inside that file.
+## First Flask App
+- Run `start_server.bat` by passing *(app name or module name or project folder)* `first_flask_app` to start the flask server.
 
-[`./1_starter/start_server.py`](./1_starter/start_server.py)
-```python
-from project import app
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+```shell
+> start_server.bat first_flask_app
 ```
+- Our `first_flask_app` is a python module which have it's own `__init__.py`.
+- That file is having just few lines of code, 
+1. import Flask
+1. Create Flask App
+1. Finally create endpoint using Flask App.
 
-- What is this `project` and `app`
-- `project` is the custom module which is created and we have `app` variable in it's  `__init__.py`.
-
-[`./1_starter/project/__init__.py`](./1_starter/project/__init__.py)
+[`./first_flask_app/__init__.py`](./first_flask_app/__init__.py)
 ```python
+# import Flask
 from flask import Flask
 
 # Creating flask app instance.
@@ -31,12 +29,12 @@ def hello_world():
 ## Let's create simple REST api only using Flask
 - We are going to create a CRUD API for simple `Link` storage app.
 - We can store any link in this app.
-- Please open `2_simple_rest_api` folder and run `start_server.py` to start the server.
-- If you see our `project` folder this time we have `routes.py`. What is inside that?
+- Run `start_server.bat` by passing *(app name or module name or project folder)* `first_flask_app` to start the flask server.
+- If you see our project folder this time we have `routes.py`. What is inside that?
 
-[`./2_simple_rest_api/project/routes.py`](./2_simple_rest_api/project/routes.py)
+[`./2_simple_rest_api/project/routes.py`](./rest_api_basic/routes.py)
 ```python
-from project import app
+from rest_api_basic import app
 from flask import jsonify, request
 from datetime import datetime
 
@@ -83,9 +81,10 @@ def deleteLink(id):
 - We have create our REST API's but we didn't add them to our flask app
 - Let's add it to our `__init__.py` file
 
-[`./2_simple_rest_api/project/__init__.py`](./2_simple_rest_api/project/__init__.py)
+[`./rest_api_basic/__init__.py`](./rest_api_basic/__init__.py)
 ```python
 # ... some code ...
+# Need to add this line after oru flask app instance is created
 
 from project import routes
 ```

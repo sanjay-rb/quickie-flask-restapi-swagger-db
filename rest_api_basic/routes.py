@@ -1,4 +1,4 @@
-from project import app
+from rest_api_basic import app
 from flask import jsonify, request
 from datetime import datetime
 

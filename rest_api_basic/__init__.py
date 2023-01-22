@@ -8,4 +8,4 @@ app = Flask(__name__)
 def hello_world():
     return "Hello, World!"
 
-from project import routes
+from rest_api_basic import routes
